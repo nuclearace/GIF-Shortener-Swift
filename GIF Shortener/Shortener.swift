@@ -15,14 +15,13 @@ class Shortener {
         self.path = NSURL(fileURLWithPath: pathAsString)
     }
     
-    func shorten(perFrameDelay:Float = 0.01) {
+    func shorten(#perFrameDelay:Float) {
         
         let source = CGImageSourceCreateWithURL(self.path, nil)
         let prop = CGImageSourceCopyProperties(source, nil) as NSDictionary
         
         if let gif = prop["{GIF}"] as? NSDictionary {
             var images = [CGImage]()
-            var imagesProps = [NSDictionary]()
             let numberOfFrames = CGImageSourceGetCount(source)
             let gifProp = [
                 "{GIF}": [
@@ -31,16 +30,16 @@ class Shortener {
             
             // add each frame to images
             for i in 0..<numberOfFrames {
-                imagesProps.append(CGImageSourceCopyPropertiesAtIndex(source, i, nil))
                 let image = CGImageSourceCreateImageAtIndex(source, i, nil)
                 images.append(image)
             }
             
             let dest = CGImageDestinationCreateWithURL(self.path, kUTTypeGIF, numberOfFrames, nil)
             
-            // Add back the properties
+            // Add back the properties for the GIF
             CGImageDestinationSetProperties(dest, prop)
             
+            // Change the delay for each frame
             for i in 0..<images.count {
                 CGImageDestinationAddImage(dest, images[i], gifProp)
             }
