@@ -10,17 +10,16 @@ import Foundation
 var running = 0
 var delay = 0.01 as Float
 
-for i in 1..<C_ARGC {
+for i in 1..<Process.argc {
     let index = Int(i)
-    if let arg = String.fromCString(C_ARGV[index]) {
-        
+    if let arg = String.fromCString(Process.arguments[index]) {
         // Skip the delay
         if ((arg as NSString).floatValue != 0) {
             continue
         }
         
         if (arg == "-d") {
-            if let del = String.fromCString(C_ARGV[index + 1]) {
+            if let del = String.fromCString(Process.arguments[index + 1]) {
                 delay = (del as NSString).floatValue
                 continue
             }
